@@ -36,14 +36,21 @@ public class WheelModule extends Subsystem {
 		angleMotor.setSelectedSensorPosition(absolutePosition, 0, RobotMap.TIMEOUT);
 		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.TIMEOUT);
 		
+		angleMotor.setSensorPhase(false);
 		angleMotor.config_kP(0, 0, RobotMap.TIMEOUT); 
 		angleMotor.config_kI(0, 0, RobotMap.TIMEOUT); 
 		angleMotor.config_kD(0, 0, RobotMap.TIMEOUT);
 		angleMotor.config_kF(0, 0, RobotMap.TIMEOUT);
 		angleMotor.config_IntegralZone(0, 0, RobotMap.TIMEOUT);
 		angleMotor.configMotionCruiseVelocity(0, RobotMap.TIMEOUT);
-		angleMotor.configMotionAcceleration(0, RobotMap.TIMEOUT);
+		angleMotor.configMotionAcceleration(0, RobotMap.TIMEOUT); // 1800
 		angleMotor.setInverted(inverted);
+		/**
+		 * br: -326
+		 * bl: -658
+		 * fr: -563
+		 * fl: -775
+		 */
 	}
 	
     public void initDefaultCommand() {
@@ -57,10 +64,11 @@ public class WheelModule extends Subsystem {
      */
     public void drive(double speed, double angle) {
 		//angle = adjustAngle(angle);
-		//angle *= RobotMap.COUNTPERDEG;
+		angle *= RobotMap.COUNTPERDEG;
     	
 		speedMotor.set(ControlMode.PercentOutput, speed, RobotMap.TIMEOUT);
-		angleMotor.set(ControlMode.Position, angle, RobotMap.TIMEOUT);
+		angleMotor.set(ControlMode.MotionMagic, angle, RobotMap.TIMEOUT);
+		SmartDashboard.putNumber(id + " error", angleMotor.getClosedLoopError(0));
 	}
 }
 

@@ -19,10 +19,10 @@ public class RobotMap {
 	 * Ports
 	 *===================*/
 	
-	public final static int FLSPEEDPORT = 0, FLANGLEPORT = 0;
-	public final static int FRSPEEDPORT = 0, FRANGLEPORT = 0;
-	public final static int BLSPEEDPORT = 0, BLANGLEPORT = 0;
-	public final static int BRSPEEDPORT = 0, BRANGLEPORT = 0;
+	public final static int FLSPEEDPORT = 7, FLANGLEPORT = 10;
+	public final static int FRSPEEDPORT = 2, FRANGLEPORT = 1;
+	public final static int BLSPEEDPORT = 6, BLANGLEPORT = 5;
+	public final static int BRSPEEDPORT = 3, BRANGLEPORT = 4;
 	
 	
 	/*===================
@@ -36,4 +36,5 @@ public class RobotMap {
 	public final static double L = 29.5;
 	public final static double W = 29.5;
 	public final static int TIMEOUT = 0;
+	public final static double COUNTPERDEG = 16.2539;
 }
