@@ -16,7 +16,7 @@ package org.usfirst.frc.team4500.robot;
 public class RobotMap {
 	
 	/*===================
-	 * Ports
+	 * Drivetrain
 	 *===================*/
 	
 	public final static int FLSPEEDPORT = 7, FLANGLEPORT = 10;
@@ -24,17 +24,48 @@ public class RobotMap {
 	public final static int BLSPEEDPORT = 6, BLANGLEPORT = 5;
 	public final static int BRSPEEDPORT = 3, BRANGLEPORT = 4;
 	
+	public final static double L = 29.5;
+	public final static double W = 29.5;
+	public final static double COUNTPERDEG = 16.2539;
+	
+	/*===================
+	 * Shooter
+	 *===================*/
+	
+	public final static int LSHOOTER = 8, RSHOOTER = 9;
+	
+	public final static int LEVELSHOOTERONE = 2, LEVELSHOOTERTWO = 3, LEVELSHOOTERPCM = 1;
+	public final static int LIFTSHOOTERONE = 4, LIFTSHOOTERTWO = 5, LIFTSHOOTERPCM = 1;
+	
+	public final static double RPMTOTICKSPER100MS = 0.146484;
+	
+	public final static int HIGHGOALSPEED = 3300;
+	public final static int LOWGOALSPEED = 2800;
+	public final static int SWITCHSPEED = 1200;
+	
+	/*===================
+	 * Intake
+	 *===================*/
+	
+	public final static int INTAKEPOSITIONMOTOR = 11;
+	public final static int INTAKELEFTMOTOR = 3, INTAKERIGHTMOTOR = 1;
+	public final static int INTAKECLAWSOLENOIDONE = 6, INTAKECLAWSOLENOIDTWO = 7, INTAKECLAWSOLENOIDPCM = 1;
+	
+	 public final static double INTAKE_DOWNPOSITION = 4713;
+	 public final static double INTAKE_SCALEPOSITION = 0;
+	 public final static double INTAKE_SWITCHPOSITION = 2053;
 	
 	/*===================
 	 * Configuration
 	 *===================*/
 	
-	// region of the joystick that doesn't register
-	public final static double DEADZONE = 0.2;
-	
-	// Length and width of the drivetrain
-	public final static double L = 29.5;
-	public final static double W = 29.5;
+	public final static double DEADZONE_XY = 0.2;
+	public final static double DEADZONE_Z = 0.4;
 	public final static int TIMEOUT = 0;
-	public final static double COUNTPERDEG = 16.2539;
+	
+	/*===================
+	 * Other
+	 *===================*/
+	
+	public final static int COMPRESSOR = 2;
 }

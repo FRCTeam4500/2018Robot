@@ -35,6 +35,22 @@ public class SwerveDrive extends Subsystem {
     	gyro = new ADXRS450_Gyro();
     }
     
+    /*=====================
+   	 * gyro methods
+   	 *=====================*/
+    
+    public void resetGyro() {
+    	gyro.reset();
+    }
+    
+    public double getGyro() {
+    	return gyro.getAngle();
+    }
+    
+    /*=====================
+   	 * helper methods
+   	 *=====================*/
+    
     /**
      * Calculates a vector (contains a magnitude (speed) and heading (angle)) for each of the four wheel modules.
      * Then calls the drive method in the four modules to start the desired movement
@@ -91,12 +107,28 @@ public class SwerveDrive extends Subsystem {
     	fl.drive(flSpeed, flAngle);
     }
     
-    public void resetGyro() {
-    	gyro.reset();
+    /**
+     * Returns an array of each module's angle error
+     * @return int array in the form {fl, fr, bl, br}
+     */
+    public int[] getAngleError() {
+    	int flError = fl.getAngleError();
+    	int frError = fr.getAngleError();
+    	int blError = bl.getAngleError();
+    	int brError = br.getAngleError();
+    	return new int[] {flError, frError, blError, brError};
     }
     
-    public double getGyro() {
-    	return gyro.getAngle();
+    /**
+     * Returns an array of each module's angle position
+     * @return int array in the form {fl, fr, bl, br}
+     */
+    public int[] getAnglePosition() {
+    	int flPosition = fl.getAnglePosition();
+    	int frPosition = fr.getAnglePosition();
+    	int blPosition = bl.getAnglePosition();
+    	int brPosition = br.getAnglePosition();
+    	return new int[] {flPosition, frPosition, blPosition, brPosition};
     }
 }
 

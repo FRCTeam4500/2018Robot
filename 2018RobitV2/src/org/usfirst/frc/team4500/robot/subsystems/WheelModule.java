@@ -2,6 +2,7 @@ package org.usfirst.frc.team4500.robot.subsystems;
 
 import org.usfirst.frc.team4500.robot.RobotMap;
 
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -37,25 +38,62 @@ public class WheelModule extends Subsystem {
 		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.TIMEOUT);
 		
 		angleMotor.setSensorPhase(false);
-		angleMotor.config_kP(0, 0, RobotMap.TIMEOUT); 
+		angleMotor.configAllowableClosedloopError(0, 0, RobotMap.TIMEOUT);
+		angleMotor.config_kP(0, 2, RobotMap.TIMEOUT); // 0.8
 		angleMotor.config_kI(0, 0, RobotMap.TIMEOUT); 
-		angleMotor.config_kD(0, 0, RobotMap.TIMEOUT);
-		angleMotor.config_kF(0, 0, RobotMap.TIMEOUT);
+		angleMotor.config_kD(0, 20, RobotMap.TIMEOUT); // 80
+		angleMotor.config_kF(0, 0.546, RobotMap.TIMEOUT);
 		angleMotor.config_IntegralZone(0, 0, RobotMap.TIMEOUT);
-		angleMotor.configMotionCruiseVelocity(0, RobotMap.TIMEOUT);
-		angleMotor.configMotionAcceleration(0, RobotMap.TIMEOUT); // 1800
+		angleMotor.configMotionCruiseVelocity(7488, RobotMap.TIMEOUT);
+		angleMotor.configMotionAcceleration(7488, RobotMap.TIMEOUT); // 1800
 		angleMotor.setInverted(inverted);
-		/**
-		 * br: -326
-		 * bl: -658
-		 * fr: -563
-		 * fl: -775
-		 */
 	}
 	
     public void initDefaultCommand() {
         //setDefaultCommand(new MySpecialCommand());
     }
+    
+    
+    /*=====================
+   	 * motor methods
+   	 *=====================*/
+    
+    /**
+	 * Adjusts the angle to fix wheel wrapping
+	 * @param angle for the motor to be set to
+	 * @return adjusted angle to account for wrapping
+	 */
+	public double adjustAngle(double angle) {
+		double target = 0;
+		double current = Math.round(angleMotor.getSelectedSensorPosition(0) / RobotMap.COUNTPERDEG);
+		double Rcurrent = 0;
+		double dir = Math.abs(current) % 360;
+		if (current >= 180) { //OLD: > and <
+			if (dir > 180) {
+				Rcurrent = dir-360;
+			} else {
+				Rcurrent = dir;
+			}
+		} else if (current <= -180) {
+			if (dir > 180) {
+				Rcurrent = -1*dir+360;
+			} else {
+				Rcurrent = dir * -1;
+			}
+		} else {
+			Rcurrent = current;
+		}
+		
+		if (angle-Rcurrent <= 180 && angle-Rcurrent >= -180) {
+			target = angle - Rcurrent + current;
+		} else if (angle-Rcurrent >= 180) { // OLD: >
+			target = angle - Rcurrent - 360 + current;
+		} else {
+			target = angle - Rcurrent + 360 + current;
+		}
+	
+		return target;
+	}
     
     /**
      * Called through the calculateVector method in the SwerveDrive class. Signals the two motors to start moving
@@ -63,12 +101,23 @@ public class WheelModule extends Subsystem {
      * @param angle of the module
      */
     public void drive(double speed, double angle) {
-		//angle = adjustAngle(angle);
+		angle = adjustAngle(angle);
 		angle *= RobotMap.COUNTPERDEG;
     	
 		speedMotor.set(ControlMode.PercentOutput, speed, RobotMap.TIMEOUT);
 		angleMotor.set(ControlMode.MotionMagic, angle, RobotMap.TIMEOUT);
-		SmartDashboard.putNumber(id + " error", angleMotor.getClosedLoopError(0));
 	}
+    
+    /*=====================
+   	 * helper methods
+   	 *=====================*/
+    
+    public int getAngleError() {
+    	return angleMotor.getClosedLoopError(0);
+    }
+    
+    public int getAnglePosition() {
+    	return angleMotor.getSelectedSensorPosition(0);
+    }
 }
 

@@ -7,11 +7,18 @@
 
 package org.usfirst.frc.team4500.robot;
 
+import org.usfirst.frc.team4500.robot.commands.Robot_Group_PreConfigure;
+import org.usfirst.frc.team4500.robot.commands.Shooter_ShooterLower;
+import org.usfirst.frc.team4500.robot.subsystems.Intake;
+import org.usfirst.frc.team4500.robot.subsystems.PneumaticsCompressor;
+import org.usfirst.frc.team4500.robot.subsystems.Shooter;
 import org.usfirst.frc.team4500.robot.subsystems.SwerveDrive;
 import org.usfirst.frc.team4500.robot.subsystems.WheelModule;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +31,9 @@ public class Robot extends TimedRobot {
 	
 	public static WheelModule fl, fr, bl, br;
 	public static SwerveDrive swerve;
+	public static Shooter shooter;
+	public static Intake intake;
+	public static PneumaticsCompressor compress;
 	public static OI oi;
 
 	/**
@@ -32,12 +42,17 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		fl = new WheelModule(RobotMap.FLANGLEPORT, RobotMap.FLSPEEDPORT, "fl", false);
+		fl = new WheelModule(RobotMap.FLANGLEPORT, RobotMap.FLSPEEDPORT, "fl", false); 
 		fr = new WheelModule(RobotMap.FRANGLEPORT, RobotMap.FRSPEEDPORT, "fr", false);
-		bl = new WheelModule(RobotMap.BLANGLEPORT, RobotMap.BLSPEEDPORT, "bl", false);
-		br = new WheelModule(RobotMap.BRANGLEPORT, RobotMap.BLSPEEDPORT, "br", false);
+		bl = new WheelModule(RobotMap.BLANGLEPORT, RobotMap.BLSPEEDPORT, "bl", false); 
+		br = new WheelModule(RobotMap.BRANGLEPORT, RobotMap.BRSPEEDPORT, "br", false);
 		
 		swerve = new SwerveDrive(fl, fr, bl, br);
+		
+		shooter = new Shooter();
+		intake = new Intake();
+		
+		compress = new PneumaticsCompressor();
 		
 		oi = new OI();
 	}
@@ -95,6 +110,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		Command lowerShooterLift = new Robot_Group_PreConfigure();
+		lowerShooterLift.start();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -110,6 +127,12 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("gyro", swerve.getGyro());
+		//Debugger.xyzDebug();
+		//Debugger.intakeDebug();
+		//Debugger.shooterDebug();
+		//Debugger.angleErrorDebug();
+		//Debugger.anglePositionDebug();
 	}
 
 	/**
