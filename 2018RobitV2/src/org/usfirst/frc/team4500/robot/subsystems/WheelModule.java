@@ -119,5 +119,9 @@ public class WheelModule extends Subsystem {
     public int getAnglePosition() {
     	return angleMotor.getSelectedSensorPosition(0);
     }
+    
+    public int getDrivePosition() {
+    	return speedMotor.getSelectedSensorPosition(0);
+    }
 }
 

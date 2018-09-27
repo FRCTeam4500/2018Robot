@@ -69,10 +69,6 @@ public class SwerveDrive extends Subsystem {
     	x = -y*Math.sin(gyro) + x*Math.cos(gyro);
     	y = temp;
     	
-    	/*SmartDashboard.putNumber("x", x);
- 	    SmartDashboard.putNumber("y", y);
- 	    SmartDashboard.putNumber("z", z);*/
- 	    
     	double a = x - z * (L / r) + 0;
     	double b = x + z * (L / r);
     	double c = y - z * (W / r) + 0;
@@ -130,5 +126,15 @@ public class SwerveDrive extends Subsystem {
     	int brPosition = br.getAnglePosition();
     	return new int[] {flPosition, frPosition, blPosition, brPosition};
     }
+    
+    /*=====================
+   	 * helper methods
+   	 *=====================*/
+    
+    public WheelModule getFL() { return fl; }
+    public WheelModule getFR() { return fr; }
+    public WheelModule getBL() { return bl; }
+    public WheelModule getBR() { return br; }
+    
 }
 

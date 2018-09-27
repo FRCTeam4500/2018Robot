@@ -28,6 +28,11 @@ public class RobotMap {
 	public final static double W = 29.5;
 	public final static double COUNTPERDEG = 16.2539;
 	
+	public final static double Pa = 2;
+	public final static double Ia = 0;
+	public final static double Da = 20;
+	public final static double Fa = .546;
+	
 	/*===================
 	 * Shooter
 	 *===================*/
@@ -68,4 +73,11 @@ public class RobotMap {
 	 *===================*/
 	
 	public final static int COMPRESSOR = 2;
+	
+	/*===================
+	 * Pathfinder
+	 *===================*/
+	
+	public final static double wheelDiameter = 0.08255;
+	public final static double maxVelocity = 0;
 }

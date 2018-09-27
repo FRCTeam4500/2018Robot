@@ -8,7 +8,6 @@
 package org.usfirst.frc.team4500.robot;
 
 import org.usfirst.frc.team4500.robot.commands.Robot_Group_PreConfigure;
-import org.usfirst.frc.team4500.robot.commands.Shooter_ShooterLower;
 import org.usfirst.frc.team4500.robot.subsystems.Intake;
 import org.usfirst.frc.team4500.robot.subsystems.PneumaticsCompressor;
 import org.usfirst.frc.team4500.robot.subsystems.Shooter;
@@ -19,6 +18,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import utility.Autonomous;
+import utility.WaypointStore;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,6 +36,7 @@ public class Robot extends TimedRobot {
 	public static Intake intake;
 	public static PneumaticsCompressor compress;
 	public static OI oi;
+	public static Autonomous auto;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -53,6 +55,8 @@ public class Robot extends TimedRobot {
 		intake = new Intake();
 		
 		compress = new PneumaticsCompressor();
+		
+		auto = new Autonomous(swerve);
 		
 		oi = new OI();
 	}
@@ -98,6 +102,7 @@ public class Robot extends TimedRobot {
 		//if (m_autonomousCommand != null) {
 		//	m_autonomousCommand.start();
 		//}
+		auto.loadTrajectory(WaypointStore.points);
 	}
 
 	/**
@@ -106,6 +111,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		auto.drive();
 	}
 
 	@Override
