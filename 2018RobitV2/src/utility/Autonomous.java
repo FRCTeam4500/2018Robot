@@ -37,19 +37,19 @@ public class Autonomous {
 		modifier = new SwerveModifier(trajectory).modify(0.5, 0.5, SwerveModifier.Mode.SWERVE_DEFAULT);
 		
 		flFollower = new EncoderFollower(modifier.getFrontLeftTrajectory());
-		flFollower.configureEncoder(swerve.getFL().getDrivePosition(), 1000, RobotMap.wheelDiameter);
+		flFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
 		flFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, 0);
 		
 		frFollower = new EncoderFollower(modifier.getFrontLeftTrajectory()); 
-		frFollower.configureEncoder(swerve.getFL().getDrivePosition(), 1000, RobotMap.wheelDiameter);
+		frFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
 		frFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, 0);
 		
 		blFollower = new EncoderFollower(modifier.getFrontLeftTrajectory());
-		blFollower.configureEncoder(swerve.getFL().getDrivePosition(), 1000, RobotMap.wheelDiameter);
+		blFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
 		blFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, 0);
 		
 		brFollower = new EncoderFollower(modifier.getFrontLeftTrajectory()); 
-		brFollower.configureEncoder(swerve.getFL().getDrivePosition(), 1000, RobotMap.wheelDiameter);
+		brFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
 		brFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, 0);
 	}
 	
@@ -74,7 +74,6 @@ public class Autonomous {
 			System.out.format("%-9s\t", "blHead");
 			System.out.format("%-9s\t", "brOut");
 			System.out.format("%-9s\t", "brHead");	
-		}
 		temp++;
 		System.out.format("\n");
 		System.out.format("%-9s\t", flOutput);
