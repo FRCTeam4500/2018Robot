@@ -79,6 +79,7 @@ public class RobotMap {
 	 *===================*/
 	
 	public final static double wheelDiameter = 0.08255;
-	public final static double maxVelocity = 0;
-	public final static int ticksPerRotation = 0;
+	public final static double maxVelocity = 15;
+	public final static double maxAcceleration = 2;
+	public final static int ticksPerRotation = 4096;
 }

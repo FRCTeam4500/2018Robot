@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team4500.robot;
 
+import java.io.File;
+
 import org.usfirst.frc.team4500.robot.commands.Robot_Group_PreConfigure;
 import org.usfirst.frc.team4500.robot.subsystems.Intake;
 import org.usfirst.frc.team4500.robot.subsystems.PneumaticsCompressor;
@@ -102,7 +104,8 @@ public class Robot extends TimedRobot {
 		//if (m_autonomousCommand != null) {
 		//	m_autonomousCommand.start();
 		//}
-		auto.loadTrajectory(WaypointStore.points);
+		System.out.println("autoInit");
+		auto.loadTrajectory(new File("/home/lvuser/MotionProfile/Loop.csv"));
 	}
 
 	/**
@@ -111,6 +114,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		System.out.println("autoPeriodic");
 		auto.drive();
 	}
 

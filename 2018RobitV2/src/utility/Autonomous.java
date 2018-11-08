@@ -1,5 +1,8 @@
 package utility;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.usfirst.frc.team4500.robot.RobotMap;
 import org.usfirst.frc.team4500.robot.subsystems.SwerveDrive;
 
@@ -32,40 +35,48 @@ public class Autonomous {
 		config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.05, 1.7, 2.0, 60.0);
 	}
 	
-	public void loadTrajectory(Waypoint[] points) {
-		trajectory = Pathfinder.generate(points, config);
+	public void loadTrajectory(File f) {
+		//trajectory = Pathfinder.generate(points, config);
+		Trajectory trajectory = Pathfinder.readFromCSV(f);
+		
 		modifier = new SwerveModifier(trajectory).modify(0.5, 0.5, SwerveModifier.Mode.SWERVE_DEFAULT);
 		
 		flFollower = new EncoderFollower(modifier.getFrontLeftTrajectory());
 		flFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
-		flFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, 0);
+		flFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, RobotMap.maxAcceleration);
 		
-		frFollower = new EncoderFollower(modifier.getFrontLeftTrajectory()); 
+		frFollower = new EncoderFollower(modifier.getFrontRightTrajectory()); 
 		frFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
-		frFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, 0);
+		frFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, RobotMap.maxAcceleration);
 		
-		blFollower = new EncoderFollower(modifier.getFrontLeftTrajectory());
+		blFollower = new EncoderFollower(modifier.getBackLeftTrajectory());
 		blFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
-		blFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, 0);
+		blFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, RobotMap.maxAcceleration);
 		
-		brFollower = new EncoderFollower(modifier.getFrontLeftTrajectory()); 
+		brFollower = new EncoderFollower(modifier.getBackRightTrajectory()); 
 		brFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
-		brFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, 0);
+		brFollower.configurePIDVA(RobotMap.Pa, RobotMap.Ia, RobotMap.Da, 1 / RobotMap.maxVelocity, RobotMap.maxAcceleration);
 	}
 	
 	public void drive() {
+		// TODO: Velocity is 0
 		double flOutput = flFollower.calculate(swerve.getFL().getDrivePosition());
 		double flHeading = Pathfinder.boundHalfDegrees(Pathfinder.r2d(flFollower.getHeading()));    // Bound to -180..180 degrees
+		swerve.getFL().drive(flOutput, flHeading);
 		
 		double frOutput = frFollower.calculate(swerve.getFL().getDrivePosition());
 		double frHeading = Pathfinder.boundHalfDegrees(Pathfinder.r2d(frFollower.getHeading()));    // Bound to -180..180 degrees
+		swerve.getFR().drive(frOutput, frHeading);
 		
 		double blOutput = blFollower.calculate(swerve.getFL().getDrivePosition());
 		double blHeading = Pathfinder.boundHalfDegrees(Pathfinder.r2d(blFollower.getHeading()));    // Bound to -180..180 degrees
-	
+		swerve.getBL().drive(blOutput, blHeading);
+		
 		double brOutput = brFollower.calculate(swerve.getFL().getDrivePosition());
 		double brHeading = Pathfinder.boundHalfDegrees(Pathfinder.r2d(brFollower.getHeading()));    // Bound to -180..180 degrees
-		if(temp % 8 == 0) {
+		swerve.getBR().drive(brOutput, brHeading);
+		
+		if(temp % 20 == 0) {
 			System.out.format("%-9s\t", "flOut");
 			System.out.format("%-9s\t", "flHead");
 			System.out.format("%-9s\t", "frOut");
@@ -73,18 +84,19 @@ public class Autonomous {
 			System.out.format("%-9s\t", "blOut");
 			System.out.format("%-9s\t", "blHead");
 			System.out.format("%-9s\t", "brOut");
-			System.out.format("%-9s\t", "brHead");	
+			System.out.format("%-9s\t", "brHead");
+			System.out.format("\n");
+		}
 		temp++;
+		System.out.format("%-9.2f\t", flOutput);
+		System.out.format("%-9.2f\t", flHeading);
+		System.out.format("%-9.2f\t", frOutput);
+		System.out.format("%-9.2f\t", frHeading);
+		System.out.format("%-9.2f\t", blOutput);
+		System.out.format("%-9.2f\t", blHeading);
+		System.out.format("%-9.2f\t", brOutput);
+		System.out.format("%-9.2f\t", brHeading);
 		System.out.format("\n");
-		System.out.format("%-9s\t", flOutput);
-		System.out.format("%-9s\t", flHeading);
-		System.out.format("%-9s\t", frOutput);
-		System.out.format("%-9s\t", frHeading);
-		System.out.format("%-9s\t", blOutput);
-		System.out.format("%-9s\t", blHeading);
-		System.out.format("%-9s\t", brOutput);
-		System.out.format("%-9s\t", brHeading);
-	
 	}
 
 }
