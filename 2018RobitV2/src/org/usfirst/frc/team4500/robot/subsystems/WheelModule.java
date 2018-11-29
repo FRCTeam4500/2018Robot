@@ -101,7 +101,7 @@ public class WheelModule extends Subsystem {
      * @param angle of the module
      */
     public void drive(double speed, double angle) {
-		//angle = adjustAngle(angle);
+		angle = adjustAngle(angle);
 		angle *= RobotMap.COUNTPERDEG;
     	
 		speedMotor.set(ControlMode.PercentOutput, speed);

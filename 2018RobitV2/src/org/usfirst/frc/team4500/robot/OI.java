@@ -12,6 +12,7 @@ import org.usfirst.frc.team4500.robot.commands.Intake_ClawOpen;
 import org.usfirst.frc.team4500.robot.commands.Intake_Group_LoadCube;
 import org.usfirst.frc.team4500.robot.commands.Intake_Group_Pressed;
 import org.usfirst.frc.team4500.robot.commands.Intake_Group_Released;
+import org.usfirst.frc.team4500.robot.commands.Misc_Physics;
 import org.usfirst.frc.team4500.robot.commands.Shooter_Group_FireScale;
 import org.usfirst.frc.team4500.robot.commands.Shooter_Group_FireSwitch;
 import org.usfirst.frc.team4500.robot.commands.Swerve_GyroReset;
@@ -32,6 +33,7 @@ public class OI {
 	Button driveResetGyro;
 	Button intakeGrabCube, intakeLoadCube, intakeClawOpen;
 	Button shooterScale, shooterSwitch;
+	Button physicsStart, physicsStop;
 	
 	public OI() {
 		driveStick = new Joystick(0);
@@ -41,34 +43,42 @@ public class OI {
 		 * intake buttons
 		 */
 		
-		driveResetGyro = new JoystickButton(driveStick, 7);
-		driveResetGyro.whenPressed(new Swerve_GyroReset());
-		
-		intakeGrabCube = new JoystickButton(driveStick, 1);
-		intakeGrabCube.whenPressed(new Intake_Group_Pressed(0.6, 0.6));
-		intakeGrabCube.whenReleased(new Intake_Group_Released());
-		
-		intakeLoadCube = new JoystickButton(driveStick, 3);
-		intakeLoadCube.whenPressed(new Intake_Group_LoadCube());
-		
-		intakeClawOpen = new JoystickButton(driveStick, 2);
-		intakeClawOpen.whenPressed(new Intake_ClawOpen());
-		intakeClawOpen.whenReleased(new Intake_ClawClose());
-		
-		shooterScale = new JoystickButton(driveStick, 6);
-		shooterScale.whenPressed(new Shooter_Group_FireScale());
-
-		shooterSwitch = new JoystickButton(driveStick, 4);
-		shooterSwitch.whenPressed(new Shooter_Group_FireSwitch());
-		
+		if (!driveStick.getName().equals("")) {
+			driveResetGyro = new JoystickButton(driveStick, 7);
+			driveResetGyro.whenPressed(new Swerve_GyroReset());
+			
+			physicsStart = new JoystickButton(driveStick, 8);
+			physicsStart.whenPressed(new Misc_Physics());
+			
+//			intakeGrabCube = new JoystickButton(driveStick, 1);
+//			intakeGrabCube.whenPressed(new Intake_Group_Pressed(0.6, 0.6));
+//			intakeGrabCube.whenReleased(new Intake_Group_Released());
+//			
+//			intakeLoadCube = new JoystickButton(driveStick, 3);
+//			intakeLoadCube.whenPressed(new Intake_Group_LoadCube());
+//			
+//			intakeClawOpen = new JoystickButton(driveStick, 2);
+//			intakeClawOpen.whenPressed(new Intake_ClawOpen());
+//			intakeClawOpen.whenReleased(new Intake_ClawClose());
+//			
+//			shooterScale = new JoystickButton(driveStick, 6);
+//			shooterScale.whenPressed(new Shooter_Group_FireScale());
+//
+//			shooterSwitch = new JoystickButton(driveStick, 4);
+//			shooterSwitch.whenPressed(new Shooter_Group_FireSwitch());
+		}
+				
 		/*
 		 * shooter buttons
 		 */
-		shooterScale = new JoystickButton(shootStick, 4);
-		shooterScale.whenPressed(new Shooter_Group_FireScale());
 		
-		shooterSwitch = new JoystickButton(shootStick, 5);
-		shooterSwitch.whenPressed(new Shooter_Group_FireSwitch());
+		if (!shootStick.getName().equals("")) {
+			shooterScale = new JoystickButton(shootStick, 4);
+			shooterScale.whenPressed(new Shooter_Group_FireScale());
+			
+			shooterSwitch = new JoystickButton(shootStick, 5);
+			shooterSwitch.whenPressed(new Shooter_Group_FireSwitch());	
+		}
 	}
 	
 	public double getX() {
