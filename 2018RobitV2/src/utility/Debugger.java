@@ -28,6 +28,22 @@ public class Debugger {
 		SmartDashboard.putNumber("br angle position", values[3]);
 	}
 	
+	public static void anglePulseWidthDebug() {
+		int[] values = Robot.swerve.getPulseWidthPosition();
+		SmartDashboard.putNumber("fl pulseWidthPosition", values[0]);
+		SmartDashboard.putNumber("fr pulseWidthPosition", values[1]);
+		SmartDashboard.putNumber("bl pulseWidthPosition", values[2]);
+		SmartDashboard.putNumber("br pulseWidthPosition", values[3]);
+	}
+	
+	public static void angleQuadratureDebug() {
+		int[] values = Robot.swerve.getQuadPosition();
+		SmartDashboard.putNumber("fl quadraturePosition", values[0]);
+		SmartDashboard.putNumber("fr quadraturePosition", values[1]);
+		SmartDashboard.putNumber("bl quadraturePosition", values[2]);
+		SmartDashboard.putNumber("br quadraturePosition", values[3]);
+	}
+	
 	/*=====================
    	 * shooter methods
    	 *=====================*/

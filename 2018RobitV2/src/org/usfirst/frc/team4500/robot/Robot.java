@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import utility.Autonomous;
+import utility.Debugger;
 import utility.Physics;
 
 /**
@@ -52,10 +53,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		fl = new WheelModule(RobotMap.FLANGLEPORT, RobotMap.FLSPEEDPORT, "fl", false); 
-		fr = new WheelModule(RobotMap.FRANGLEPORT, RobotMap.FRSPEEDPORT, "fr", false);
-		bl = new WheelModule(RobotMap.BLANGLEPORT, RobotMap.BLSPEEDPORT, "bl", false); 
-		br = new WheelModule(RobotMap.BRANGLEPORT, RobotMap.BRSPEEDPORT, "br", false);
+		fl = new WheelModule(RobotMap.FLANGLEPORT, RobotMap.FLSPEEDPORT, "fl", false, 3419); 
+		fr = new WheelModule(RobotMap.FRANGLEPORT, RobotMap.FRSPEEDPORT, "fr", false, 845);
+		bl = new WheelModule(RobotMap.BLANGLEPORT, RobotMap.BLSPEEDPORT, "bl", false, 87); 
+		br = new WheelModule(RobotMap.BRANGLEPORT, RobotMap.BRSPEEDPORT, "br", false, 885);
 		
 		swerve = new SwerveDrive(fl, fr, bl, br);
 		
@@ -93,6 +94,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		Debugger.anglePulseWidthDebug();
+		Debugger.angleQuadratureDebug();
 	}
 
 	/**
@@ -136,8 +139,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		Command lowerShooterLift = new Robot_Group_PreConfigure();
-		lowerShooterLift.start();
+		Command preconfigure = new Robot_Group_PreConfigure();
+		//preconfigure.start();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -158,7 +161,9 @@ public class Robot extends TimedRobot {
 		//Debugger.intakeDebug();
 		//Debugger.shooterDebug();
 		//Debugger.angleErrorDebug();
-		//Debugger.anglePositionDebug();
+		Debugger.anglePositionDebug();
+		Debugger.anglePulseWidthDebug();
+		Debugger.angleQuadratureDebug();
 		SmartDashboard.putNumber("Enc", swerve.getBR().getDrivePosition());
 	}
 

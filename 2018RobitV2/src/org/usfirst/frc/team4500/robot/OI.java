@@ -7,14 +7,11 @@
 
 package org.usfirst.frc.team4500.robot;
 
-import org.usfirst.frc.team4500.robot.commands.Intake_ClawClose;
-import org.usfirst.frc.team4500.robot.commands.Intake_ClawOpen;
-import org.usfirst.frc.team4500.robot.commands.Intake_Group_LoadCube;
-import org.usfirst.frc.team4500.robot.commands.Intake_Group_Pressed;
-import org.usfirst.frc.team4500.robot.commands.Intake_Group_Released;
+import org.usfirst.frc.team4500.robot.commands.Misc_AngleMove;
 import org.usfirst.frc.team4500.robot.commands.Misc_Physics;
 import org.usfirst.frc.team4500.robot.commands.Shooter_Group_FireScale;
 import org.usfirst.frc.team4500.robot.commands.Shooter_Group_FireSwitch;
+import org.usfirst.frc.team4500.robot.commands.Swerve_Calibrate;
 import org.usfirst.frc.team4500.robot.commands.Swerve_GyroReset;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -34,6 +31,7 @@ public class OI {
 	Button intakeGrabCube, intakeLoadCube, intakeClawOpen;
 	Button shooterScale, shooterSwitch;
 	Button physicsStart, physicsStop;
+	Button calibrate, set;
 	
 	public OI() {
 		driveStick = new Joystick(0);
@@ -49,6 +47,12 @@ public class OI {
 			
 			physicsStart = new JoystickButton(driveStick, 8);
 			physicsStart.whenPressed(new Misc_Physics());
+			
+			calibrate = new JoystickButton(driveStick, 9);
+			calibrate.whenPressed(new Swerve_Calibrate());
+			
+			set = new JoystickButton(driveStick, 10);
+			set.whenPressed(new Misc_AngleMove());
 			
 //			intakeGrabCube = new JoystickButton(driveStick, 1);
 //			intakeGrabCube.whenPressed(new Intake_Group_Pressed(0.6, 0.6));

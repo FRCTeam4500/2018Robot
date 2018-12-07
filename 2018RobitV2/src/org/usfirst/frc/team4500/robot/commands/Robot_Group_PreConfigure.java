@@ -13,6 +13,7 @@ public class Robot_Group_PreConfigure extends CommandGroup {
     public Robot_Group_PreConfigure() {
         requires(Robot.shooter);
         
+        addSequential(new Swerve_Calibrate());
         addSequential(new WaitCommand(3));
         addSequential(new Shooter_LiftLower());
         addSequential(new Shooter_ShooterRaise());

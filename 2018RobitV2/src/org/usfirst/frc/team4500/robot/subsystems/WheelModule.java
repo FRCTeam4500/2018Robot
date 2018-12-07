@@ -19,6 +19,7 @@ public class WheelModule extends Subsystem {
 	private TalonSRX speedMotor;
 	
 	private String id;
+	private int zero;
 	
 	/**
 	 * Constructor that initializes the two motors and configures them with the desired information
@@ -27,15 +28,20 @@ public class WheelModule extends Subsystem {
 	 * @param id of the module (to identify which one is which through the code)
 	 * @param inverted should the angle motor be inverted
 	 */
-	public WheelModule(int anglePort, int speedPort, String id, boolean inverted) {
+	public WheelModule(int anglePort, int speedPort, String id, boolean inverted, int zero) {
 		this.id = id;
+		this.zero = zero;
 		
 		angleMotor = new TalonSRX(anglePort);
 		speedMotor = new TalonSRX(speedPort);
 		
-		int absolutePosition = angleMotor.getSelectedSensorPosition(0);
-		angleMotor.setSelectedSensorPosition(absolutePosition, 0, RobotMap.TIMEOUT);
 		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.TIMEOUT);
+		
+//		int absolutePosition = angleMotor.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+//		angleMotor.setSelectedSensorPosition(absolutePosition, 0, RobotMap.TIMEOUT);
+//		angleMotor.setSelectedSensorPosition(0, 0, RobotMap.TIMEOUT);
+//		int absolutePosition = angleMotor.getSelectedSensorPosition(0);
+//		angleMotor.setSelectedSensorPosition(absolutePosition, 0, RobotMap.TIMEOUT);
 		
 		angleMotor.setSensorPhase(false);
 		angleMotor.configAllowableClosedloopError(0, 0, RobotMap.TIMEOUT);
@@ -51,6 +57,36 @@ public class WheelModule extends Subsystem {
 	
     public void initDefaultCommand() {
         //setDefaultCommand(new MySpecialCommand());
+    }
+    
+    public void calibrate() {
+    	int quadPos = angleMotor.getSensorCollection().getQuadraturePosition();
+		int pulseWidthPos = angleMotor.getSensorCollection().getPulseWidthPosition();
+		
+		if (quadPos < 0) {
+			quadPos = 4096 - Math.abs(quadPos);
+		}
+		
+		//setPoint = (quadPos % 4096) + (zero - pulseWidthPos);
+		//angleMotor.set(ControlMode.Position, setPoint);
+		//angleMotor.setSelectedSensorPosition(setPoint);
+    }
+    
+    public void calibrate2() {
+		int pulseWidthPos = angleMotor.getSensorCollection().getPulseWidthPosition();// & 0xFFF;
+		
+		//int setPoint = pulseWidthPos > 0 ? zero - (pulseWidthPos % 4096) : zero - Math.floorMod(pulseWidthPos, 4096);
+		//setPoint *= -1;
+		int setPoint = zero - (pulseWidthPos % 4096);
+		
+		//angleMotor.getSensorCollection().setQuadraturePosition(setPoint, RobotMap.TIMEOUT);
+		angleMotor.setSelectedSensorPosition(setPoint, 0, RobotMap.TIMEOUT);
+		//angleMotor.set(ControlMode.Position, setPoint);
+		//angleMotor.setSelectedSensorPosition(setPoint);
+    }
+    
+    public void setToSetPoint() {
+    	angleMotor.set(ControlMode.MotionMagic, 0);
     }
     
     
@@ -103,9 +139,12 @@ public class WheelModule extends Subsystem {
     public void drive(double speed, double angle) {
 		angle = adjustAngle(angle);
 		angle *= RobotMap.COUNTPERDEG;
+		
+		//SmartDashboard.putNumber(id + " set point", setPoint);
+		//SmartDashboard.putNumber(id + " pwPos", angleMotor.getSensorCollection().getPulseWidthPosition());
     	
-		speedMotor.set(ControlMode.PercentOutput, speed);
-		angleMotor.set(ControlMode.MotionMagic, angle);
+		//speedMotor.set(ControlMode.PercentOutput, speed);
+		//angleMotor.set(ControlMode.MotionMagic, angle);
 	}
     
     /*=====================
@@ -122,6 +161,14 @@ public class WheelModule extends Subsystem {
     
     public int getDrivePosition() {
     	return speedMotor.getSelectedSensorPosition(0);
+    }
+    
+    public int getPulseWidth() {
+    	return angleMotor.getSensorCollection().getPulseWidthPosition();
+    }
+    
+    public int getQuadrature() {
+    	return angleMotor.getSensorCollection().getQuadraturePosition();
     }
 }
 

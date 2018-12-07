@@ -127,6 +127,37 @@ public class SwerveDrive extends Subsystem {
     	return new int[] {flPosition, frPosition, blPosition, brPosition};
     }
     
+    public int[] getPulseWidthPosition() {
+    	int flPW = fl.getPulseWidth();
+    	int frPW = fr.getPulseWidth();
+    	int blPW = bl.getPulseWidth();
+    	int brPW = br.getPulseWidth();
+    	return new int[] {flPW, frPW, blPW, brPW};
+    }
+    
+    public int[] getQuadPosition() {
+    	int flQ = fl.getQuadrature();
+    	int frQ = fr.getQuadrature();
+    	int blQ = bl.getQuadrature();
+    	int brQ = br.getQuadrature();
+    	
+    	return new int[] {flQ, frQ, blQ, brQ};
+    }
+    
+    public void calibrate() {
+    	fl.calibrate2();
+    	fr.calibrate2();
+    	bl.calibrate2();
+    	br.calibrate2();
+    }
+    
+    public void set() {
+    	fl.setToSetPoint();
+    	fr.setToSetPoint();
+    	bl.setToSetPoint();
+    	br.setToSetPoint();
+    }
+    
     /*=====================
    	 * helper methods
    	 *=====================*/
