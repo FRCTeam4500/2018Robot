@@ -140,41 +140,17 @@ public class WheelModule extends Subsystem {
 	private double lastAngle = 0;
     public void drive(double speed, double angle) {
 		angle = adjustAngle(angle);
-//    	if (angle < 0) {
-//    		speed = -speed;
-//    		angle += 180;
-//    	}
-//    	SmartDashboard.putNumber(id + " angle", angle);
-//    	SmartDashboard.putNumber(id + " angleLast", angleLast);
-//    	SmartDashboard.putNumber(id + " change", angle-angleLast);
-    	
-    	if (angle-lastAngle > 90 || angle-lastAngle < -90) {
-    		angle = 180*(angle % 360)-(angle-lastAngle);
-    	}
-    	
-    	
-//    	if (id.equals("fl")) {
-//    		if (angle-angleLast > 180 || angle-angleLast < -180) {
-//    			System.out.println("Angle is " + angle + "\n"
-//    					+ "Last is " + angleLast + "\n"
-//    					+ "Change is " + (angle-angleLast));
-//    		}
-//    	}
-    	
-    	lastAngle= angle;
-    	
+
+		if (angle > lastAngle && angle-lastAngle > 90) {
+			angle = angle-180;
+			speed = -speed;
+		} else if (angle < lastAngle && lastAngle-angle > 90) {
+			angle = angle+180;
+			speed = -speed;
+		}
+    	lastAngle= angle; 	
     	
 		angle *= RobotMap.COUNTPERDEG;
-		
-		//SmartDashboard.putNumber(id + " set point", setPoint);
-		//SmartDashboard.putNumber(id + " pwPos", angleMotor.getSensorCollection().getPulseWidthPosition());
-    	
-//		if (speed > 0.1) {
-//			speedMotor.set(ControlMode.PercentOutput, 1);
-//		} else {
-//			speedMotor.set(ControlMode.PercentOutput, 0);
-//		}
-//		angleMotor.set(ControlMode.MotionMagic, 0);
 
 		speedMotor.set(ControlMode.PercentOutput, speed);
 		angleMotor.set(ControlMode.MotionMagic, angle);
