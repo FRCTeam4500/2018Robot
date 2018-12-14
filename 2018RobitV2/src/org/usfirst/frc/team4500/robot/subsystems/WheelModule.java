@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4500.robot.subsystems;
 
+import org.usfirst.frc.team4500.robot.Robot;
 import org.usfirst.frc.team4500.robot.RobotMap;
 
 import com.ctre.phoenix.ParamEnum;
@@ -34,15 +35,15 @@ public class WheelModule extends Subsystem {
 		
 		angleMotor = new TalonSRX(anglePort);
 		speedMotor = new TalonSRX(speedPort);
-		
 		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.TIMEOUT);
 		
+		speedMotor.configPeakOutputForward(1);
+		speedMotor.configPeakOutputReverse(-1);
 //		int absolutePosition = angleMotor.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 //		angleMotor.setSelectedSensorPosition(absolutePosition, 0, RobotMap.TIMEOUT);
 //		angleMotor.setSelectedSensorPosition(0, 0, RobotMap.TIMEOUT);
 //		int absolutePosition = angleMotor.getSelectedSensorPosition(0);
 //		angleMotor.setSelectedSensorPosition(absolutePosition, 0, RobotMap.TIMEOUT);
-		
 		angleMotor.setSensorPhase(false);
 		angleMotor.configAllowableClosedloopError(0, 0, RobotMap.TIMEOUT);
 		angleMotor.config_kP(0, 2, RobotMap.TIMEOUT); // 0.8
@@ -136,15 +137,47 @@ public class WheelModule extends Subsystem {
      * @param speed of the module
      * @param angle of the module
      */
+	private double lastAngle = 0;
     public void drive(double speed, double angle) {
 		angle = adjustAngle(angle);
+//    	if (angle < 0) {
+//    		speed = -speed;
+//    		angle += 180;
+//    	}
+//    	SmartDashboard.putNumber(id + " angle", angle);
+//    	SmartDashboard.putNumber(id + " angleLast", angleLast);
+//    	SmartDashboard.putNumber(id + " change", angle-angleLast);
+    	
+    	if (angle-lastAngle > 90 || angle-lastAngle < -90) {
+    		angle = 180*(angle % 360)-(angle-lastAngle);
+    	}
+    	
+    	
+//    	if (id.equals("fl")) {
+//    		if (angle-angleLast > 180 || angle-angleLast < -180) {
+//    			System.out.println("Angle is " + angle + "\n"
+//    					+ "Last is " + angleLast + "\n"
+//    					+ "Change is " + (angle-angleLast));
+//    		}
+//    	}
+    	
+    	lastAngle= angle;
+    	
+    	
 		angle *= RobotMap.COUNTPERDEG;
 		
 		//SmartDashboard.putNumber(id + " set point", setPoint);
 		//SmartDashboard.putNumber(id + " pwPos", angleMotor.getSensorCollection().getPulseWidthPosition());
     	
-		//speedMotor.set(ControlMode.PercentOutput, speed);
-		//angleMotor.set(ControlMode.MotionMagic, angle);
+//		if (speed > 0.1) {
+//			speedMotor.set(ControlMode.PercentOutput, 1);
+//		} else {
+//			speedMotor.set(ControlMode.PercentOutput, 0);
+//		}
+//		angleMotor.set(ControlMode.MotionMagic, 0);
+
+		speedMotor.set(ControlMode.PercentOutput, speed);
+		angleMotor.set(ControlMode.MotionMagic, angle);
 	}
     
     /*=====================

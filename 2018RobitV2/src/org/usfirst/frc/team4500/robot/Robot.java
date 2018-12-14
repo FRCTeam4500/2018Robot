@@ -67,14 +67,14 @@ public class Robot extends TimedRobot {
 		
 		auto = new Autonomous(swerve);
 		autoChooser = new SendableChooser<String>();
-		autoChooser.addDefault("Forward", "forward.csv");
+		autoChooser.addDefault("Forward", "forward_2m.csv");
 		autoChooser.addObject("Bend", "bend.csv");
 		prefs = Preferences.getInstance();
-		prefs.putDouble("P", 0);
+		prefs.putDouble("P", 1);
 		prefs.putDouble("I", 0);
 		prefs.putDouble("D", 0);
-		prefs.putDouble("V", 0);
-		prefs.putDouble("A", 0);
+		prefs.putDouble("V", RobotMap.maxVelocity);
+		prefs.putDouble("A", RobotMap.maxAcceleration);
 		physics = new Physics(swerve);
 		SmartDashboard.putData("Auto Profile", autoChooser);
 		
@@ -94,8 +94,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
-		Debugger.anglePulseWidthDebug();
-		Debugger.angleQuadratureDebug();
+		//Debugger.anglePulseWidthDebug();
+		//Debugger.angleQuadratureDebug();
+		SmartDashboard.putNumber("Enc", swerve.getBR().getDrivePosition());
 	}
 
 	/**
@@ -134,6 +135,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		Debugger.angleErrorDebug();
 		auto.drive();
 	}
 
@@ -161,9 +163,9 @@ public class Robot extends TimedRobot {
 		//Debugger.intakeDebug();
 		//Debugger.shooterDebug();
 		//Debugger.angleErrorDebug();
-		Debugger.anglePositionDebug();
-		Debugger.anglePulseWidthDebug();
-		Debugger.angleQuadratureDebug();
+		//Debugger.anglePositionDebug();
+		//Debugger.anglePulseWidthDebug();
+		//Debugger.angleQuadratureDebug();
 		SmartDashboard.putNumber("Enc", swerve.getBR().getDrivePosition());
 	}
 

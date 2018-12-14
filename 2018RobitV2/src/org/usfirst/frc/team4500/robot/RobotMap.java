@@ -78,8 +78,12 @@ public class RobotMap {
 	 * Pathfinder
 	 *===================*/
 	
+	// In meters
 	public final static double wheelDiameter = 0.08255;
-	public final static double maxVelocity = 15;
-	public final static double maxAcceleration = 2;
-	public final static int ticksPerRotation = 4096;
+	public final static double wheelBaseWidth = 0.689;
+	public final static double wheelBaseDepth = 0.5612;
+	
+	public final static double maxVelocity = 2.903;
+	public final static double maxAcceleration = 3.128;
+	public final static int ticksPerRotation = 5280; // CHECK
 }

@@ -44,6 +44,7 @@ public class Physics {
 	 */
 	public void run() throws IOException {
 		if (!started) {
+			System.out.println("Started Physics.run");
 			startTime = System.nanoTime();
 			
 			f = new File("/home/lvuser/pvt.csv");
@@ -57,7 +58,7 @@ public class Physics {
 				try {
 					long elapsedTime = System.nanoTime() - startTime;
 					String line = getTimeMeasure(elapsedTime) + "," + getPositionMeasure() + "\n";
-					System.out.println(line);
+					System.out.print(line);
 					bw.write(line);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -66,6 +67,7 @@ public class Physics {
 			
 			started = true;
 		} else {
+			System.out.println("Stopped Physics.run");
 			exec.shutdown();
 			bw.close();
 			started = false;
@@ -77,7 +79,7 @@ public class Physics {
 	 * @return
 	 */
 	private double getPositionMeasure() {
-		return swerve.getFL().getDrivePosition();
+		return swerve.getBR().getDrivePosition();
 	}
 	
 	/**
@@ -86,6 +88,6 @@ public class Physics {
 	 * @return the time converted to the desired unit
 	 */
 	private long getTimeMeasure(long timeInNano) {
-		return TimeUnit.NANOSECONDS.toSeconds(timeInNano);
+		return TimeUnit.NANOSECONDS.toMillis(timeInNano);
 	}
 }
