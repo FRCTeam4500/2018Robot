@@ -75,9 +75,21 @@ public class Physics2 {
 			started = true;
 		} else {
 			System.out.println("Stopped Physics.run");
+			Command command = new Misc_VA(0);
+			command.start();
 			exec.shutdown();
 			bw.close();
 			started = false;
+		}
+	}
+	
+	public void stopAt(int i) {
+		if (this.i == i) {
+			try {
+				this.run();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
