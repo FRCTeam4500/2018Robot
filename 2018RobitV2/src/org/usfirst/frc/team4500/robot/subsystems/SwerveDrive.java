@@ -103,6 +103,13 @@ public class SwerveDrive extends Subsystem {
     	fl.drive(flSpeed, flAngle);
     }
     
+    public void drive(double speed, double angle) {
+    	br.drive(speed, angle);
+    	bl.drive(speed, angle);
+    	fr.drive(speed, angle);
+    	fl.drive(speed, angle);
+    }
+    
     /**
      * Returns an array of each module's angle error
      * @return int array in the form {fl, fr, bl, br}
@@ -140,6 +147,15 @@ public class SwerveDrive extends Subsystem {
     	int frQ = fr.getQuadrature();
     	int blQ = bl.getQuadrature();
     	int brQ = br.getQuadrature();
+    	
+    	return new int[] {flQ, frQ, blQ, brQ};
+    }
+    
+    public int[] getDrivePosition() {
+    	int flQ = fl.getDrivePosition();
+    	int frQ = fr.getDrivePosition();
+    	int blQ = bl.getDrivePosition();
+    	int brQ = br.getDrivePosition();
     	
     	return new int[] {flQ, frQ, blQ, brQ};
     }

@@ -8,6 +8,7 @@
 package org.usfirst.frc.team4500.robot;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.usfirst.frc.team4500.robot.commands.Robot_Group_PreConfigure;
 import org.usfirst.frc.team4500.robot.subsystems.Intake;
@@ -22,7 +23,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import utility.Autonomous;
+import utility.Autonomous2;
 import utility.Debugger;
 import utility.Physics;
 
@@ -42,7 +43,7 @@ public class Robot extends TimedRobot {
 	public static PneumaticsCompressor compress;
 	public static OI oi;
 	
-	public static Autonomous auto;
+	public static Autonomous2 auto;
 	public static Physics physics;
 	public static Preferences prefs;
 	public static SendableChooser<String> autoChooser;
@@ -65,16 +66,21 @@ public class Robot extends TimedRobot {
 		
 		compress = new PneumaticsCompressor();
 		
-		auto = new Autonomous(swerve);
+		auto = new Autonomous2(swerve);
 		autoChooser = new SendableChooser<String>();
-		autoChooser.addDefault("Forward", "forward_2m.csv");
-		autoChooser.addObject("Bend", "bend.csv");
+		autoChooser.addDefault("forward5m", "forward5m.csv");
+		autoChooser.addObject("forward3m", "forward3m.csv");
+		autoChooser.addObject("forward10m", "forward10m.csv");
+		autoChooser.addObject("curve3m", "curve_3-1.csv");
+		autoChooser.addObject("curve5m", "curve_5-1.csv");
+		autoChooser.addObject("curve10m", "curve_10-1.csv");
+		//autoChooser.addObject("Bend", "bend.csv");
 		prefs = Preferences.getInstance();
 		prefs.putDouble("P", 1);
 		prefs.putDouble("I", 0);
 		prefs.putDouble("D", 0);
-		prefs.putDouble("V", RobotMap.maxVelocity);
-		prefs.putDouble("A", RobotMap.maxAcceleration);
+		prefs.putDouble("V", 0);
+		prefs.putDouble("A", 0);
 		physics = new Physics(swerve);
 		SmartDashboard.putData("Auto Profile", autoChooser);
 		
@@ -126,7 +132,11 @@ public class Robot extends TimedRobot {
 		//	m_autonomousCommand.start();
 		//}
 		System.out.println("autoInit");
-		auto.loadTrajectory(new File("/home/lvuser/MotionProfile/" + autoChooser.getSelected()));
+		try {
+			auto.loadTrajectory("/home/lvuser/MotionProfile/" + autoChooser.getSelected());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -63,20 +63,21 @@ public class Autonomous {
 		brFollower = new EncoderFollower(modifier.getBackRightTrajectory()); 
 		brFollower.configureEncoder(swerve.getBR().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
 		brFollower.configurePIDVA(prefs.getDouble("P", 0), prefs.getDouble("I", 0), prefs.getDouble("I", 0), 1 / prefs.getDouble("V", 0), prefs.getDouble("A", 0));
+		System.out.println("Done loading");
 	}
 	
 	public void drive() {
 		double flOutput = flFollower.calculate(swerve.getBR().getDrivePosition());
 		double flHeading = Pathfinder.boundHalfDegrees(Pathfinder.r2d(flFollower.getHeading()));    // Bound to -180..180 degrees
-		//swerve.getFL().drive(flOutput, flHeading);
+		swerve.getFL().drive(flOutput, flHeading);
 		
 		double frOutput = frFollower.calculate(swerve.getBR().getDrivePosition());
 		double frHeading = Pathfinder.boundHalfDegrees(Pathfinder.r2d(frFollower.getHeading()));    // Bound to -180..180 degrees
-		//swerve.getFR().drive(frOutput, frHeading);
+		swerve.getFR().drive(frOutput, frHeading);
 		
 		double blOutput = blFollower.calculate(swerve.getBR().getDrivePosition());
 		double blHeading = Pathfinder.boundHalfDegrees(Pathfinder.r2d(blFollower.getHeading()));    // Bound to -180..180 degrees
-		//swerve.getBL().drive(blOutput, blHeading);
+		swerve.getBL().drive(blOutput, blHeading);
 		
 		double brOutput = brFollower.calculate(swerve.getBR().getDrivePosition());
 		double brHeading = Pathfinder.boundHalfDegrees(Pathfinder.r2d(brFollower.getHeading()));    // Bound to -180..180 degrees

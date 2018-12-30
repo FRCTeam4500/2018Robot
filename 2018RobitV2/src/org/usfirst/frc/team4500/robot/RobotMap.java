@@ -28,10 +28,10 @@ public class RobotMap {
 	public final static double W = 29.5;
 	public final static double COUNTPERDEG = 16.2539;
 	
-	public final static double Pa = 2;
-	public final static double Ia = 0;
-	public final static double Da = 20;
-	public final static double Fa = .546;
+	public final static double P = 0;
+	public final static double I = 0;
+	public final static double D = 0;
+	public final static double F = 0;
 	
 	/*===================
 	 * Shooter
@@ -83,7 +83,18 @@ public class RobotMap {
 	public final static double wheelBaseWidth = 0.689;
 	public final static double wheelBaseDepth = 0.5612;
 	
-	public final static double maxVelocity = 2.903;
-	public final static double maxAcceleration = 3.128;
+	public final static double flKv = 0;
+	public final static double flKa = 0;
+	
+	public final static double frKv = 0;
+	public final static double frKa = 0;
+	
+	public final static double blKv = 0;
+	public final static double blKa = 0;
+	
+	public final static double brKv = 0;
+	public final static double brKa = 0;
+	//public final static double maxVelocity = 36.1879;
+	//public final static double maxAcceleration = 7.75288;
 	public final static int ticksPerRotation = 5280; // CHECK
 }

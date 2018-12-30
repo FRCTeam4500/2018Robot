@@ -6,6 +6,8 @@ import org.usfirst.frc.team4500.robot.RobotMap;
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -36,6 +38,8 @@ public class WheelModule extends Subsystem {
 		angleMotor = new TalonSRX(anglePort);
 		speedMotor = new TalonSRX(speedPort);
 		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.TIMEOUT);
+		
+		speedMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 20);
 		
 		speedMotor.configPeakOutputForward(1);
 		speedMotor.configPeakOutputReverse(-1);
@@ -139,22 +143,34 @@ public class WheelModule extends Subsystem {
      */
 	private double lastAngle = 0;
     public void drive(double speed, double angle) {
-		angle = adjustAngle(angle);
-
-		if (angle > lastAngle && angle-lastAngle > 90) {
-			angle = angle-180;
-			speed = -speed;
-		} else if (angle < lastAngle && lastAngle-angle > 90) {
-			angle = angle+180;
-			speed = -speed;
-		}
-    	lastAngle= angle; 	
+//		angle = adjustAngle(angle);
+//
+//		if (angle > lastAngle && angle-lastAngle > 90) {
+//			angle = angle-180;
+//			speed = -speed;
+//		} else if (angle < lastAngle && lastAngle-angle > 90) {
+//			angle = angle+180;
+//			speed = -speed;
+//		}
+//    	lastAngle= angle; 	
+    	
+    	if (id.equals("fl")) {
+    		SmartDashboard.putNumber("voltage", speedMotor.getMotorOutputVoltage());
+    	}
     	
 		angle *= RobotMap.COUNTPERDEG;
-
+		SmartDashboard.putNumber(id + " speed", speed);
+		
+//		srx.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 20);
 		speedMotor.set(ControlMode.PercentOutput, speed);
 		angleMotor.set(ControlMode.MotionMagic, angle);
 	}
+    
+    public void driveAtVoltage(double voltage) {
+//    	speedMotor.set(ControlMode., demand);
+    	speedMotor.set(ControlMode.PercentOutput, voltage / 12);
+    	angleMotor.set(ControlMode.MotionMagic, 0);
+    }
     
     /*=====================
    	 * helper methods
