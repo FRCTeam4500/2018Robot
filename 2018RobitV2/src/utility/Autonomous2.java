@@ -7,7 +7,7 @@ import org.usfirst.frc.team4500.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.Preferences;
 import robohound_trajectory.RoboHound_Trajectory;
-import robohound_trajectory.following.EncoderFollower;
+import robohound_trajectory.followers.EncoderFollower;
 import robohound_trajectory.generating.Trajectory;
 
 /**
@@ -36,15 +36,15 @@ public class Autonomous2 {
 		
 		flFollower = new EncoderFollower(trajectory);
 		flFollower.configurePIDVA(prefs.getDouble("P", 0), 0, 0, RobotMap.flKv, RobotMap.flKa);
-		flFollower.configureEncoder(swerve.getFL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
+		flFollower.configureEncoder(swerve.getBR().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
 		
 		frFollower = new EncoderFollower(trajectory);
 		frFollower.configurePIDVA(prefs.getDouble("P", 0), 0, 0, RobotMap.frKv, RobotMap.frKa);
-		frFollower.configureEncoder(swerve.getFR().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
+		frFollower.configureEncoder(swerve.getBR().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
 		
 		blFollower = new EncoderFollower(trajectory);
 		blFollower.configurePIDVA(prefs.getDouble("P", 0), 0, 0, RobotMap.blKv, RobotMap.blKa);
-		blFollower.configureEncoder(swerve.getBL().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
+		blFollower.configureEncoder(swerve.getBR().getDrivePosition(), RobotMap.ticksPerRotation, RobotMap.wheelDiameter);
 		
 		brFollower = new EncoderFollower(trajectory);
 		brFollower.configurePIDVA(prefs.getDouble("P", 0), 0, 0, RobotMap.brKv, RobotMap.brKa);
@@ -52,13 +52,13 @@ public class Autonomous2 {
 	}
 	
 	public void drive() {
-		double flOutput = flFollower.calculate(swerve.getFL().getDrivePosition());
+		double flOutput = flFollower.calculate(swerve.getBR().getDrivePosition());
 		double flHeading = flFollower.getHeading();
 		
-		double frOutput = frFollower.calculate(swerve.getFR().getDrivePosition());
+		double frOutput = frFollower.calculate(swerve.getBR().getDrivePosition());
 		double frHeading = frFollower.getHeading();
 		
-		double blOutput = blFollower.calculate(swerve.getBL().getDrivePosition());
+		double blOutput = blFollower.calculate(swerve.getBR().getDrivePosition());
 		double blHeading = blFollower.getHeading();
 		
 		double brOutput = brFollower.calculate(swerve.getBR().getDrivePosition());

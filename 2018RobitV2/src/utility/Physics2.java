@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.usfirst.frc.team4500.robot.Robot;
 import org.usfirst.frc.team4500.robot.commands.Misc_VA;
 import org.usfirst.frc.team4500.robot.subsystems.SwerveDrive;
 
@@ -36,9 +37,15 @@ public class Physics2 {
 	private int i = 0;
 	
 	private SwerveDrive swerve;
+	private Mode mode;
 	
-	public Physics2(SwerveDrive swerve) {
+	public enum Mode {
+		VELOCITY, ACCELERATION;
+	};
+	
+	public Physics2(SwerveDrive swerve, Mode mode) {
 		this.swerve = swerve;
+		this.mode = mode;
 	}
 	
 	/**
@@ -50,27 +57,48 @@ public class Physics2 {
 			System.out.println("Started Physics.run");
 			startTime = System.nanoTime();
 			
-			f = new File("/home/lvuser/pvt.csv");
+			if (mode == Mode.VELOCITY) {
+				f = new File("/home/lvuser/data_Kv.csv");
+			} else {
+				f = new File("/home/lvuser/data_Ka.csv");
+			}
 			f.delete();
 			f.createNewFile();
 			fos = new FileOutputStream(f);
 			bw = new BufferedWriter(new OutputStreamWriter(fos));
-			bw.write(getLine("time", "voltage", "fl pos", "fr pos", "bl pos", "br pos"));
+			//bw.write(getLine("time", "voltage", "fl pos", "fr pos", "bl pos", "br pos"));
 			exec = Executors.newSingleThreadScheduledExecutor();
-			exec.scheduleAtFixedRate(() -> {
-				try {
-					double voltage = .25*i;
-					Command command = new Misc_VA(voltage);
-					command.start();
-					i++;
-					long elapsedTime = getTimeMeasure(System.nanoTime()) - startTime;
-					int[] pos = getPositionMeasure();
-					
-					bw.write(getLine(elapsedTime, voltage, pos[0], pos[1], pos[2], pos[3]));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}, 0, 1, TimeUnit.SECONDS);
+			if (mode == Mode.VELOCITY) {
+				exec.scheduleAtFixedRate(() -> {
+					try {
+						double voltage = .25*i;
+						System.out.println("Voltage: " + voltage);
+						Command command = new Misc_VA(voltage);
+						command.start();
+						i++;
+						long elapsedTime = getTimeMeasure(System.nanoTime() - startTime);
+						int[] pos = getPositionMeasure();
+						
+						bw.write(getLine(elapsedTime, voltage, pos[0], pos[1], pos[2], pos[3]));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}, 0, 1, TimeUnit.SECONDS);
+			} else {
+				exec.scheduleAtFixedRate(() -> {
+					try {
+						Command command = new Misc_VA(7.2);
+						command.start();
+						long elapsedTime = getTimeMeasure(System.nanoTime() - startTime);
+						int[] pos = getPositionMeasure();
+						double[] voltage = getVoltage();
+						
+						bw.write(getLine(elapsedTime, pos[0], voltage[0], pos[1], voltage[1], pos[2], voltage[2], pos[3], voltage[3]));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}, 0, 50, TimeUnit.MILLISECONDS);
+			}
 			
 			started = true;
 		} else {
@@ -83,26 +111,20 @@ public class Physics2 {
 		}
 	}
 	
-	public void stopAt(int i) {
-		if (this.i == i) {
-			try {
-				this.run();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	private String getLine(Object... data) {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < data.length; i++) {
-			if (i < data.length-2) {
+			if (i < data.length-1) {
 				builder.append(data[i] + ",");
 			} else {
-				builder.append(data[i]);
+				builder.append(data[i] + "\n");
 			}
 		}
 		return builder.toString();
+	}
+	
+	public boolean isStarted() {
+		return started;
 	}
 	
 	/**
@@ -113,12 +135,20 @@ public class Physics2 {
 		return swerve.getDrivePosition();
 	}
 	
+	private double[] getVoltage() {
+		return swerve.getVoltage();
+	}
+	
 	/**
 	 * Converts the ellapsed time in nano seconds to another unit. Change based on the unit needed
 	 * @param timeInNano the time ellapsed in nano seconds
 	 * @return the time converted to the desired unit
 	 */
 	private long getTimeMeasure(long timeInNano) {
-		return TimeUnit.NANOSECONDS.toSeconds(timeInNano);
+		if (mode == Mode.VELOCITY) {
+			return TimeUnit.NANOSECONDS.toSeconds(timeInNano);
+		} else {
+			return TimeUnit.NANOSECONDS.toMillis(timeInNano);
+		}
 	}
 }

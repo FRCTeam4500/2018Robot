@@ -160,6 +160,14 @@ public class SwerveDrive extends Subsystem {
     	return new int[] {flQ, frQ, blQ, brQ};
     }
     
+    public double[] getVoltage() {
+    	double flV = fl.getVoltage();
+    	double frV = fr.getVoltage();
+    	double blV = bl.getVoltage();
+    	double brV = br.getVoltage();
+    	return new double[] {flV, frV, blV, brV};
+    }
+    
     public void calibrate() {
     	fl.calibrate2();
     	fr.calibrate2();

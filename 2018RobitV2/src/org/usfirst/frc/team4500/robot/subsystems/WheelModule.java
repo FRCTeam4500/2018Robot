@@ -38,9 +38,7 @@ public class WheelModule extends Subsystem {
 		angleMotor = new TalonSRX(anglePort);
 		speedMotor = new TalonSRX(speedPort);
 		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.TIMEOUT);
-		
-		speedMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 20);
-		
+
 		speedMotor.configPeakOutputForward(1);
 		speedMotor.configPeakOutputReverse(-1);
 //		int absolutePosition = angleMotor.getSensorCollection().getPulseWidthPosition() & 0xFFF;
@@ -153,15 +151,9 @@ public class WheelModule extends Subsystem {
 //			speed = -speed;
 //		}
 //    	lastAngle= angle; 	
-    	
-    	if (id.equals("fl")) {
-    		SmartDashboard.putNumber("voltage", speedMotor.getMotorOutputVoltage());
-    	}
-    	
+//    	
 		angle *= RobotMap.COUNTPERDEG;
-		SmartDashboard.putNumber(id + " speed", speed);
 		
-//		srx.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 20);
 		speedMotor.set(ControlMode.PercentOutput, speed);
 		angleMotor.set(ControlMode.MotionMagic, angle);
 	}
@@ -194,6 +186,14 @@ public class WheelModule extends Subsystem {
     
     public int getQuadrature() {
     	return angleMotor.getSensorCollection().getQuadraturePosition();
+    }
+    
+    public double getVoltage() {
+    	return speedMotor.getMotorOutputVoltage();
+    }
+    
+    public TalonSRX getSpeedMotor() {
+    	return speedMotor;
     }
 }
 

@@ -19,11 +19,11 @@ public class Misc_Physics extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	try {
-			Robot.physics.run();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//    	try {
+//			//Robot.physics.run();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
     }
 
     // Called repeatedly when this Command is scheduled to run

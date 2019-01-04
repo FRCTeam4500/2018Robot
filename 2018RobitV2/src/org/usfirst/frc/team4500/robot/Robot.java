@@ -10,6 +10,7 @@ package org.usfirst.frc.team4500.robot;
 import java.io.File;
 import java.io.IOException;
 
+import org.usfirst.frc.team4500.robot.commands.Misc_VA;
 import org.usfirst.frc.team4500.robot.commands.Robot_Group_PreConfigure;
 import org.usfirst.frc.team4500.robot.subsystems.Intake;
 import org.usfirst.frc.team4500.robot.subsystems.PneumaticsCompressor;
@@ -23,9 +24,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import utility.Autonomous2;
+import utility.Autonomous;
 import utility.Debugger;
-import utility.Physics;
+import utility.Physics2;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -43,8 +44,8 @@ public class Robot extends TimedRobot {
 	public static PneumaticsCompressor compress;
 	public static OI oi;
 	
-	public static Autonomous2 auto;
-	public static Physics physics;
+	public static Autonomous auto;
+	public static Physics2 physics;
 	public static Preferences prefs;
 	public static SendableChooser<String> autoChooser;
 
@@ -54,10 +55,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		fl = new WheelModule(RobotMap.FLANGLEPORT, RobotMap.FLSPEEDPORT, "fl", false, 3419); 
-		fr = new WheelModule(RobotMap.FRANGLEPORT, RobotMap.FRSPEEDPORT, "fr", false, 845);
 		bl = new WheelModule(RobotMap.BLANGLEPORT, RobotMap.BLSPEEDPORT, "bl", false, 87); 
 		br = new WheelModule(RobotMap.BRANGLEPORT, RobotMap.BRSPEEDPORT, "br", false, 885);
+		fl = new WheelModule(RobotMap.FLANGLEPORT, RobotMap.FLSPEEDPORT, "fl", false, 3419); 
+		fr = new WheelModule(RobotMap.FRANGLEPORT, RobotMap.FRSPEEDPORT, "fr", false, 845);
 		
 		swerve = new SwerveDrive(fl, fr, bl, br);
 		
@@ -66,22 +67,20 @@ public class Robot extends TimedRobot {
 		
 		compress = new PneumaticsCompressor();
 		
-		auto = new Autonomous2(swerve);
 		autoChooser = new SendableChooser<String>();
-		autoChooser.addDefault("forward5m", "forward5m.csv");
-		autoChooser.addObject("forward3m", "forward3m.csv");
-		autoChooser.addObject("forward10m", "forward10m.csv");
-		autoChooser.addObject("curve3m", "curve_3-1.csv");
-		autoChooser.addObject("curve5m", "curve_5-1.csv");
-		autoChooser.addObject("curve10m", "curve_10-1.csv");
-		//autoChooser.addObject("Bend", "bend.csv");
-		prefs = Preferences.getInstance();
-		prefs.putDouble("P", 1);
-		prefs.putDouble("I", 0);
-		prefs.putDouble("D", 0);
-		prefs.putDouble("V", 0);
-		prefs.putDouble("A", 0);
-		physics = new Physics(swerve);
+		autoChooser.addDefault("default 3m", "default.csv");
+		autoChooser.addObject("test 3m", "test.csv");
+		
+		auto = new Autonomous(swerve);
+
+//		prefs = Preferences.getInstance();
+//		prefs.putDouble("P", .35);
+//		prefs.putDouble("I", 0);
+//		prefs.putDouble("D", 0);
+//		// .55
+//		prefs.putDouble("V", .28);
+//		prefs.putDouble("A", .99);
+		//physics = new Physics2(swerve, Physics2.Mode.VELOCITY);
 		SmartDashboard.putData("Auto Profile", autoChooser);
 		
 		oi = new OI();
@@ -94,7 +93,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+//		try {
+//			if (physics.isStarted()) {
+//				physics.run();
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
@@ -118,25 +123,14 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//m_autonomousCommand = m_chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
-		// schedule the autonomous command (example)
-		//if (m_autonomousCommand != null) {
-		//	m_autonomousCommand.start();
-		//}
+//		try {
+//			physics.run();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+			
 		System.out.println("autoInit");
-		try {
-			auto.loadTrajectory("/home/lvuser/MotionProfile/" + autoChooser.getSelected());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		auto.loadTrajectory(new File("/home/lvuser/MotionProfile/" + autoChooser.getSelected()));
 	}
 
 	/**
@@ -145,7 +139,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		Debugger.angleErrorDebug();
+		//Debugger.angleErrorDebug();
+//		Command autoCmd = new Misc_VA(2.5);
+//		autoCmd.start();
 		auto.drive();
 	}
 

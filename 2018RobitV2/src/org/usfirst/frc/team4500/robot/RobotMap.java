@@ -83,16 +83,16 @@ public class RobotMap {
 	public final static double wheelBaseWidth = 0.689;
 	public final static double wheelBaseDepth = 0.5612;
 	
-	public final static double flKv = 0;
+	public final static double flKv = 0.28;
 	public final static double flKa = 0;
 	
-	public final static double frKv = 0;
+	public final static double frKv = 0.28;
 	public final static double frKa = 0;
 	
-	public final static double blKv = 0;
+	public final static double blKv = 0.28;
 	public final static double blKa = 0;
 	
-	public final static double brKv = 0;
+	public final static double brKv = 0.28;
 	public final static double brKa = 0;
 	//public final static double maxVelocity = 36.1879;
 	//public final static double maxAcceleration = 7.75288;
